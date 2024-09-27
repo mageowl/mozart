@@ -22,12 +22,12 @@ impl Pt2i {
         Self { x, y }
     }
 
-    pub fn angle(self) -> f64 {
-        f64::atan2(self.x as f64, self.y as f64)
+    pub fn angle(self) -> f32 {
+        f32::atan2(self.x as f32, self.y as f32)
     }
 
-    pub fn length(self) -> f64 {
-        (self.x.pow(2) as f64 + self.y.pow(2) as f64).sqrt()
+    pub fn length(self) -> f32 {
+        (self.x.pow(2) as f32 + self.y.pow(2) as f32).sqrt()
     }
 
     pub fn length_squared(self) -> i32 {
@@ -157,30 +157,30 @@ impl DivAssign<i32> for Pt2i {
 #[repr(C)]
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct Pt2 {
-    pub x: f64,
-    pub y: f64,
+    pub x: f32,
+    pub y: f32,
 }
 
 #[inline(always)]
-pub const fn pt2(x: f64, y: f64) -> Pt2 {
+pub const fn pt2(x: f32, y: f32) -> Pt2 {
     Pt2 { x, y }
 }
 
 impl Pt2 {
     #[inline(always)]
-    pub const fn new(x: f64, y: f64) -> Self {
+    pub const fn new(x: f32, y: f32) -> Self {
         Self { x, y }
     }
 
-    pub fn angle(self) -> f64 {
-        f64::atan2(self.x, self.y)
+    pub fn angle(self) -> f32 {
+        f32::atan2(self.x, self.y)
     }
 
-    pub fn length(self) -> f64 {
+    pub fn length(self) -> f32 {
         (self.x.powi(2) + self.y.powi(2)).sqrt()
     }
 
-    pub fn length_squared(self) -> f64 {
+    pub fn length_squared(self) -> f32 {
         self.x.powi(2) + self.y.powi(2)
     }
 
@@ -197,11 +197,11 @@ impl Pt2 {
         self
     }
 
-    pub fn dot(self, other: Self) -> f64 {
+    pub fn dot(self, other: Self) -> f32 {
         self.x * other.x + self.y * other.y
     }
 
-    pub fn cross(self, other: Self) -> f64 {
+    pub fn cross(self, other: Self) -> f32 {
         self.x * other.x - self.y * other.y
     }
 
@@ -222,13 +222,13 @@ impl Pt2 {
     }
 
     pub fn rotated(self, by: Radians) -> Self {
-        todo!()
+        self * Matrix::from_rotation(by)
     }
 }
 
 impl From<Pt2i> for Pt2 {
     fn from(value: Pt2i) -> Self {
-        pt2(value.x as f64, value.y as f64)
+        pt2(value.x as f32, value.y as f32)
     }
 }
 
@@ -238,25 +238,25 @@ impl From<Matrix<1, 2>> for Pt2 {
     }
 }
 
-impl From<[f64; 2]> for Pt2 {
-    fn from(value: [f64; 2]) -> Self {
+impl From<[f32; 2]> for Pt2 {
+    fn from(value: [f32; 2]) -> Self {
         pt2(value[0], value[1])
     }
 }
 
-impl From<(f64, f64)> for Pt2 {
-    fn from(value: (f64, f64)) -> Self {
+impl From<(f32, f32)> for Pt2 {
+    fn from(value: (f32, f32)) -> Self {
         pt2(value.0, value.1)
     }
 }
 
-impl From<Pt2> for [f64; 2] {
+impl From<Pt2> for [f32; 2] {
     fn from(value: Pt2) -> Self {
         [value.x, value.y]
     }
 }
 
-impl From<Pt2> for (f64, f64) {
+impl From<Pt2> for (f32, f32) {
     fn from(value: Pt2) -> Self {
         (value.x, value.y)
     }
@@ -307,16 +307,16 @@ impl MulAssign for Pt2 {
     }
 }
 
-impl Mul<f64> for Pt2 {
+impl Mul<f32> for Pt2 {
     type Output = Self;
 
-    fn mul(self, rhs: f64) -> Self::Output {
+    fn mul(self, rhs: f32) -> Self::Output {
         pt2(self.x * rhs, self.y * rhs)
     }
 }
 
-impl MulAssign<f64> for Pt2 {
-    fn mul_assign(&mut self, rhs: f64) {
+impl MulAssign<f32> for Pt2 {
+    fn mul_assign(&mut self, rhs: f32) {
         self.x *= rhs;
         self.y *= rhs;
     }
@@ -337,16 +337,16 @@ impl DivAssign for Pt2 {
     }
 }
 
-impl Div<f64> for Pt2 {
+impl Div<f32> for Pt2 {
     type Output = Self;
 
-    fn div(self, rhs: f64) -> Self::Output {
+    fn div(self, rhs: f32) -> Self::Output {
         pt2(self.x / rhs, self.y / rhs)
     }
 }
 
-impl DivAssign<f64> for Pt2 {
-    fn div_assign(&mut self, rhs: f64) {
+impl DivAssign<f32> for Pt2 {
+    fn div_assign(&mut self, rhs: f32) {
         self.x /= rhs;
         self.y /= rhs;
     }

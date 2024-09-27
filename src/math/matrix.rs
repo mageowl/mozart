@@ -7,7 +7,7 @@ use super::{point::Pt2, Radians};
 
 #[derive(Clone, Copy, PartialEq)]
 pub struct Matrix<const WIDTH: usize, const HEIGHT: usize> {
-    data: [[f64; HEIGHT]; WIDTH],
+    data: [[f32; HEIGHT]; WIDTH],
 }
 
 impl<const W: usize, const H: usize> Matrix<W, H> {
@@ -15,7 +15,7 @@ impl<const W: usize, const H: usize> Matrix<W, H> {
         data: [[0.0; H]; W],
     };
 
-    pub const fn from_rows(rows: [[f64; W]; H]) -> Self {
+    pub const fn from_rows(rows: [[f32; W]; H]) -> Self {
         let mut cols = [[0.0; H]; W];
         let mut x = 0;
         let mut y = 0;
@@ -31,7 +31,7 @@ impl<const W: usize, const H: usize> Matrix<W, H> {
     }
 
     #[inline(always)]
-    pub const fn new(cols: [[f64; H]; W]) -> Self {
+    pub const fn new(cols: [[f32; H]; W]) -> Self {
         Self { data: cols }
     }
 
@@ -40,14 +40,14 @@ impl<const W: usize, const H: usize> Matrix<W, H> {
     }
 }
 
-impl<const W: usize, const H: usize> From<[[f64; H]; W]> for Matrix<W, H> {
-    fn from(value: [[f64; H]; W]) -> Self {
+impl<const W: usize, const H: usize> From<[[f32; H]; W]> for Matrix<W, H> {
+    fn from(value: [[f32; H]; W]) -> Self {
         Self::new(value)
     }
 }
 
-impl<const SIZE: usize> From<[f64; SIZE]> for Matrix<1, SIZE> {
-    fn from(value: [f64; SIZE]) -> Self {
+impl<const SIZE: usize> From<[f32; SIZE]> for Matrix<1, SIZE> {
+    fn from(value: [f32; SIZE]) -> Self {
         Self::new([value])
     }
 }
@@ -72,7 +72,7 @@ impl<const SIZE: usize> Matrix<SIZE, SIZE> {
 }
 
 impl<const W: usize, const H: usize> Index<(usize, usize)> for Matrix<W, H> {
-    type Output = f64;
+    type Output = f32;
 
     fn index(&self, index: (usize, usize)) -> &Self::Output {
         &self.data[index.0][index.1]
@@ -114,17 +114,17 @@ impl<const W: usize, const H: usize> Sum for Matrix<W, H> {
     }
 }
 
-impl<const SIZE: usize> Mul<f64> for Matrix<1, SIZE> {
+impl<const SIZE: usize> Mul<f32> for Matrix<1, SIZE> {
     type Output = Self;
 
-    fn mul(mut self, rhs: f64) -> Self::Output {
+    fn mul(mut self, rhs: f32) -> Self::Output {
         self *= rhs;
         self
     }
 }
 
-impl<const SIZE: usize> MulAssign<f64> for Matrix<1, SIZE> {
-    fn mul_assign(&mut self, rhs: f64) {
+impl<const SIZE: usize> MulAssign<f32> for Matrix<1, SIZE> {
+    fn mul_assign(&mut self, rhs: f32) {
         for i in 0..SIZE {
             self[(0, i)] *= rhs;
         }
