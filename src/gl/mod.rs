@@ -1,6 +1,6 @@
 use std::error::Error;
 
-use miniquad::{window, Backend, PassAction, RenderingBackend, ShaderMeta, ShaderSource};
+use miniquad::{window, Backend, RenderingBackend, ShaderMeta, ShaderSource};
 use slotmap::{new_key_type, SlotMap};
 
 use shader::Shader;
@@ -59,6 +59,6 @@ impl GraphicsContext {
     }
 
     pub(crate) fn clear(&mut self, color: Color) {
-        let pass_action = PassAction::clear_color(color.r, color.g, color.b, color.a);
+        self.ctx.clear(Some(color.into()), None, None);
     }
 }

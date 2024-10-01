@@ -1,7 +1,6 @@
 #[derive(Obj, Obj2d)]
 struct Player {
     transform: Transform,
-
     sprite: Sprite,
     collider: Collider,
 
@@ -18,14 +17,9 @@ impl Make for Player {
     type Config = ();
 
     fn make(game: &mut Game, _cfg: ()) -> Self {
-        let transform = Transform::new();
-
         Self {
-            transform,
-            sprite: Sprite::make(
-                game,
-                Sprite::cfg_from_texture(Self::SPRITE).parent(transform),
-            ),
+            transform: Transform::new(),
+            sprite: Sprite::make(game, Sprite::cfg_from_texture(Self::SPRITE)),
             collider: Collider::make(
                 game,
                 Collider::cfg_from_shape(
@@ -34,8 +28,7 @@ impl Make for Player {
                         offset: pt2(-8., -8.),
                     },
                     "player",
-                )
-                .parent(transform),
+                ),
             ),
 
             velocity: Pt2::ZERO,
@@ -57,6 +50,9 @@ impl Update for Player {
         } else {
             math::move_toward(&mut self.velocity.x, 0, Self::FRICTION * Self::SPEED);
         }
+
+        self.collider
+            .move_and_slide(&mut self.transform, self.velocity);
     }
 }
 
@@ -83,9 +79,7 @@ impl Make for TestScene {
 }
 
 fn main() {
-    let game = Game::new();
-    game.add_server(CollisionServer::new(vec!["player", "level"]));
-
-    let scene = TestScene::make(&mut game);
-    game.event_loop(scene);
+    Game::new()
+        .add_server(CollisionServer::new(vec!["player", "level"]))
+        .start::<TestScene>();
 }
