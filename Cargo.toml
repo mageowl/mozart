@@ -6,3 +6,5 @@ edition = "2021"
 [dependencies]
 miniquad = "0.4.6"
 slotmap = "1.0.7"
+mozart_macro = { path = "./mozart_macro/" }
+image = "0.25.2"

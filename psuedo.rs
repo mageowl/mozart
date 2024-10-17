@@ -18,7 +18,7 @@ impl Make for Player {
 
     fn make(game: &mut Game, _cfg: ()) -> Self {
         Self {
-            transform: Transform::new(),
+            transform: Transform::IDENTITY,
             sprite: Sprite::make(game, Sprite::cfg_from_texture(Self::SPRITE)),
             collider: Collider::make(
                 game,
@@ -62,7 +62,7 @@ struct TestScene {
     map: TileMap,
 }
 
-const TEST_MAP: AssetId<LDTKMap> = asset!("test_map.ldtk");
+const TEST_MAP: Arc<LDTKMap> = asset!("test_map.ldtk");
 
 impl Make for TestScene {
     type Config = ();

@@ -27,7 +27,10 @@ impl Shader {
     ) -> Self {
         let pipeline = ctx.new_pipeline(
             &[BufferLayout::default()],
-            &[VertexAttribute::new("in_pos", VertexFormat::Float2)],
+            &[
+                VertexAttribute::new("in_pos", VertexFormat::Float2),
+                VertexAttribute::new("in_uv", VertexFormat::Float2),
+            ],
             quad_shader,
             PipelineParams::default(),
         );

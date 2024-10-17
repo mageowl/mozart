@@ -17,6 +17,8 @@ pub const fn pt2i(x: i32, y: i32) -> Pt2i {
 }
 
 impl Pt2i {
+    pub const ZERO: Self = pt2i(0, 0);
+
     #[inline(always)]
     pub const fn new(x: i32, y: i32) -> Self {
         Self { x, y }
@@ -167,6 +169,8 @@ pub const fn pt2(x: f32, y: f32) -> Pt2 {
 }
 
 impl Pt2 {
+    pub const ZERO: Self = pt2(0., 0.);
+
     #[inline(always)]
     pub const fn new(x: f32, y: f32) -> Self {
         Self { x, y }

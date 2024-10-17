@@ -30,8 +30,8 @@ impl Color {
 
     pub const fn from_hex_rgb(hex: u32) -> Self {
         Self {
-            r: (hex & 0xff0000 >> 16) as u8,
-            g: (hex & 0x00ff00 >> 8) as u8,
+            r: ((hex & 0xff0000) >> 16) as u8,
+            g: ((hex & 0x00ff00) >> 8) as u8,
             b: (hex & 0x0000ff) as u8,
             a: 255,
         }
