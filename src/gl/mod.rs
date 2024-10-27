@@ -9,7 +9,7 @@ use slotmap::{new_key_type, SlotMap};
 use vertex::Vertex;
 
 use crate::{
-    game::assets::texture::{Image, Texture},
+    game::assets::texture::Image,
     math::{
         color::Color,
         matrix::Matrix,
@@ -29,9 +29,8 @@ pub struct GraphicsContext {
     shaders: SlotMap<ShaderId, Shader>,
     default_shader: ShaderId,
 
-    pub(crate) indices_square: BufferId,
-
-    viewport_transform: Option<(Pt2, Transform)>,
+    indices_square: BufferId,
+    viewport_transform: Transform,
 }
 
 impl GraphicsContext {
@@ -57,12 +56,19 @@ impl GraphicsContext {
             BufferSource::slice(&[0, 1, 2, 0, 2, 3]),
         );
 
+        let size = window::screen_size();
+        let viewport_transform = Transform::new(
+            Matrix::new([[1. / size.0, 0.], [0., -1. / size.1]]),
+            pt2(-1.0, 1.0),
+            Pt2::ZERO,
+        );
+
         Ok(Self {
             default_shader,
             shaders,
             indices_square,
             ctx,
-            viewport_transform: None,
+            viewport_transform,
         })
     }
 
@@ -89,6 +95,7 @@ impl GraphicsContext {
             TextureParams {
                 width: image.width,
                 height: image.height,
+                mag_filter: miniquad::FilterMode::Nearest,
                 ..Default::default()
             },
         )
@@ -133,20 +140,14 @@ impl GraphicsContext {
     pub fn indices_square(&self) -> BufferId {
         self.indices_square
     }
-    pub fn viewport_transform(&mut self) -> Transform {
-        let size: Pt2 = window::screen_size().into();
-        if let Some((s, t)) = self.viewport_transform {
-            if s == size {
-                return t;
-            }
-        }
-
-        let transform = Transform::new(
-            Matrix::new([[1. / size.x, 0.], [0., 1. / size.y]]),
-            pt2(-1., -1.),
+    pub fn viewport_transform(&self) -> Transform {
+        self.viewport_transform
+    }
+    pub(crate) fn update_viewport_transform(&mut self, size: Pt2) {
+        self.viewport_transform = Transform::new(
+            Matrix::new([[2. / size.x, 0.], [0., -2. / size.y]]),
+            pt2(-1.0, 1.0),
             Pt2::ZERO,
         );
-        self.viewport_transform = Some((size, transform));
-        transform
     }
 }

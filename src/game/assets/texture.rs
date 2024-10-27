@@ -1,5 +1,3 @@
-use miniquad::TextureId;
-
 use crate::{
     gl::GraphicsContext,
     math::{

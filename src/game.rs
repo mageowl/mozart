@@ -1,7 +1,8 @@
-use std::{path::PathBuf, sync::Arc};
+use std::sync::Arc;
 
 use assets::{Asset, Assets, GlAsset};
-use miniquad::{conf::Conf, date, EventHandler};
+use input::Input;
+use miniquad::{conf::Conf, date, window::dpi_scale, EventHandler, KeyCode, MouseButton};
 
 use crate::{
     gl::GraphicsContext,
@@ -13,6 +14,7 @@ use crate::{
 };
 
 pub mod assets;
+pub mod input;
 
 pub struct Game {
     clear_color: Color,
@@ -27,6 +29,7 @@ pub struct Game {
     pub(crate) gl: GraphicsContext,
 
     pub assets: Assets,
+    pub input: Input,
 }
 
 pub struct GameBuilder {
@@ -68,7 +71,9 @@ impl GameBuilder {
 
                     scene: None,
                     gl: GraphicsContext::new().unwrap(),
+
                     assets: Assets::new(),
+                    input: Input::new(),
                 };
                 game.scene = Some(Box::new(Scene::make_default(&mut game)));
 
@@ -134,6 +139,13 @@ impl EventHandler for Game {
     }
 
     fn resize_event(&mut self, width: f32, height: f32) {
-        self.window_size = pt2(width, height)
+        self.window_size = pt2(width, height);
+        self.gl.update_viewport_transform(self.window_size);
+    }
+
+    fn key_down_event(&mut self, key: miniquad::KeyCode, _: miniquad::KeyMods, repeat: bool) {
+        if !repeat {
+            self.input.set_key_down(key)
+        }
     }
 }

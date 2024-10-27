@@ -21,11 +21,21 @@ pub struct Sprite {
 
 pub struct SpriteConf {
     texture_path: &'static str,
+    transform: Option<Transform>,
 }
 
 impl Sprite {
     pub fn cfg_from_texture(path: &'static str) -> SpriteConf {
-        SpriteConf { texture_path: path }
+        SpriteConf {
+            texture_path: path,
+            transform: None,
+        }
+    }
+}
+impl SpriteConf {
+    pub fn transform(mut self, transform: Transform) -> Self {
+        self.transform = Some(transform);
+        self
     }
 }
 
@@ -35,10 +45,10 @@ impl Make for Sprite {
     fn make(game: &mut crate::game::Game, config: Self::Config) -> Self {
         let texture: Arc<Texture> = game.load_gl_asset(config.texture_path);
         Self {
-            transform: Transform::IDENTITY,
+            transform: config.transform.unwrap_or_else(|| Transform::IDENTITY),
 
             bindings: Bindings {
-                index_buffer: game.gl.indices_square,
+                index_buffer: game.gl.indices_square(),
                 vertex_buffers: vec![game.gl.create_vertex_buffer(4)],
                 images: vec![texture.gl_texture],
             },

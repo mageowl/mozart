@@ -3,10 +3,7 @@ use std::{
     ops::{Add, AddAssign, Index, IndexMut, Mul, MulAssign},
 };
 
-use super::{
-    point::{pt2, Pt2},
-    Radians,
-};
+use super::{point::Pt2, Radians};
 
 #[derive(Clone, Copy, PartialEq)]
 pub struct Matrix<const WIDTH: usize, const HEIGHT: usize> {
@@ -138,7 +135,7 @@ impl<const SIZE: usize> Mul<Matrix<SIZE, SIZE>> for Matrix<1, SIZE> {
     type Output = Self;
 
     fn mul(self, rhs: Matrix<SIZE, SIZE>) -> Self::Output {
-        (0..SIZE).map(|i| self.column(i) * rhs[(0, i)]).sum()
+        (0..SIZE).map(|i| rhs.column(i) * self[(0, i)]).sum()
     }
 }
 
